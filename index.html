@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Devolução de Containers - Manaus</title>
+<style>
+  :root{--bg:#f4f6fa;--card:#fff;--tx:#14213d;--mut:#667;--ac:#002060;--hl:#fff3b0;--bd:#d5dbe6}
+  @media (prefers-color-scheme:dark){:root{--bg:#0f1420;--card:#1a2233;--tx:#e8ecf5;--mut:#9aa6bd;--ac:#7aa2ff;--hl:#4a4310;--bd:#2c3752}}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--tx);padding:16px;max-width:1100px;margin-inline:auto}
+  h1{font-size:1.3rem;margin:0}
+  .top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+  .mut{color:var(--mut);font-size:.85rem}
+  button{background:var(--ac);color:#fff;border:0;border-radius:8px;padding:8px 14px;cursor:pointer}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+  .tabs button{background:var(--card);color:var(--tx);border:1px solid var(--bd)}
+  .tabs button.on{background:var(--ac);color:#fff}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+  .card{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:12px}
+  .card b{display:block;color:var(--mut);font-size:.8rem;margin-bottom:4px}
+  .card span{font-size:1rem;font-weight:600}
+  .wrap{overflow-x:auto;margin-top:22px;background:var(--card);border:1px solid var(--bd);border-radius:10px}
+  table{border-collapse:collapse;width:100%;font-size:.85rem}
+  th,td{border-bottom:1px solid var(--bd);padding:8px;text-align:center}
+  th{background:var(--ac);color:#fff}
+  td:first-child{font-weight:700;text-align:left;white-space:nowrap}
+  .hoje{background:var(--hl)}
+  th.hoje{background:#c9a400;color:#000}
+  #erro{color:#c0392b;font-weight:600}
+</style>
+</head>
+<body>
+<div class="top">
+  <div><h1>Devolução de containers · Manaus - AM</h1>
+  <div class="mut" id="info">Carregando…</div></div>
+  <button onclick="carregar()">Atualizar</button>
+</div>
+<div id="erro"></div>
+<div class="tabs" id="tabs"></div>
+<div class="grid" id="cards"></div>
+<div class="wrap"><table id="tab"></table></div>
+<script>
+// >>> Se publicar a API em outro domínio, coloque a URL completa aqui <<<
+const API = "/api/devolucao";
+const ORDEM = ["DOM","SEG","TER","QUA","QUI","SEX","SAB"]; // índice = Date.getDay()
+const chave = d => d.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toUpperCase().slice(0,3);
+let dados=null, sel=null;
+
+function hojeChave(){
+  const wd = new Intl.DateTimeFormat("en-US",{weekday:"short",timeZone:"America/Manaus"}).format(new Date());
+  return {Sun:"DOM",Mon:"SEG",Tue:"TER",Wed:"QUA",Thu:"QUI",Fri:"SEX",Sat:"SAB"}[wd];
+}
+async function carregar(){
+  document.getElementById("erro").textContent="";
+  try{
+    const r = await fetch(API); const j = await r.json();
+    if(!r.ok) throw new Error(j.erro||"Falha ao consultar o portal");
+    dados=j; sel=sel||hojeChave(); desenha();
+  }catch(e){ document.getElementById("erro").textContent="Erro: "+e.message; }
+}
+function desenha(){
+  const hoje=hojeChave();
+  const idx = dados.dias.map(chave);
+  document.getElementById("info").textContent="Atualizado em "+new Date(dados.atualizadoEm).toLocaleString("pt-BR",{timeZone:"America/Manaus"});
+  document.getElementById("tabs").innerHTML = dados.dias.map((d,i)=>
+    `<button class="${idx[i]===sel?'on':''}" onclick="sel='${idx[i]}';desenha()">${d.replace('-FEIRA','')}${idx[i]===hoje?' (hoje)':''}</button>`).join("");
+  const i = idx.indexOf(sel);
+  document.getElementById("cards").innerHTML = dados.rows.map(r=>`<div class="card"><b>${r.tipo}</b><span>${r.valores[i]||'-'}</span></div>`).join("");
+  document.getElementById("tab").innerHTML =
+    "<tr><th>Tipo/Dia</th>"+dados.dias.map((d,k)=>`<th class="${idx[k]===hoje?'hoje':''}">${d}</th>`).join("")+"</tr>"+
+    dados.rows.map(r=>`<tr><td>${r.tipo}</td>`+r.valores.map((v,k)=>`<td class="${idx[k]===hoje?'hoje':''}">${v}</td>`).join("")+"</tr>").join("");
+}
+carregar();
+</script>
+</body>
+</html>
