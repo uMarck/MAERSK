@@ -33,10 +33,15 @@ function parseManaus(html) {
 
   const iHead = linhas.findIndex((l) => /tipo\s*\/\s*dia/i.test(l[0]));
   if (iHead < 0) throw new Error("Cabeçalho 'Tipo/Dia' não encontrado.");
-  const dias = linhas[iHead].slice(1);
+
+  // O portal repete colunas (células com colspan=2 ou colunas duplicadas).
+  // Mantém só a primeira coluna de cada cabeçalho repetido em sequência.
+  const head = linhas[iHead];
+  const manter = head.map((_, i) => i).filter((i) => i === 0 || head[i].toUpperCase() !== head[i - 1].toUpperCase());
+  const dias = manter.slice(1).map((i) => head[i]);
   const rows = linhas.slice(iHead + 1)
     .filter((l) => l.length > 1 && l[0])
-    .map((l) => ({ tipo: l[0], valores: dias.map((_, i) => l[i + 1] || "-") }));
+    .map((l) => ({ tipo: l[0], valores: manter.slice(1).map((i) => l[i] || "-") }));
   return { dias, rows };
 }
 

@@ -3,73 +3,170 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Devolução de Containers - Manaus</title>
+<title>Devolução de Containers · Manaus</title>
 <style>
-  :root{--bg:#f4f6fa;--card:#fff;--tx:#14213d;--mut:#667;--ac:#002060;--hl:#fff3b0;--bd:#d5dbe6}
-  @media (prefers-color-scheme:dark){:root{--bg:#0f1420;--card:#1a2233;--tx:#e8ecf5;--mut:#9aa6bd;--ac:#7aa2ff;--hl:#4a4310;--bd:#2c3752}}
+  :root{
+    --bg:#eef2f8;--card:#fff;--tx:#0f1b33;--mut:#6b7794;--bd:#dde4f0;--ac:#1d4ed8;--acsoft:#e3ebff;
+    --c1:#2563eb;--c1s:#e0eaff;   /* Tomiasi */
+    --c2:#059669;--c2s:#d9f5ea;   /* Delima */
+    --c3:#d97706;--c3s:#ffedd2;   /* Super Terminais */
+    --c0:#64748b;--c0s:#e8ecf3;   /* outros */
+    --hl:#fff6cf;--sh:0 1px 2px rgba(15,27,51,.06),0 6px 18px rgba(15,27,51,.06)
+  }
+  @media (prefers-color-scheme:dark){:root{
+    --bg:#0b1020;--card:#151c30;--tx:#e9eefb;--mut:#93a0bf;--bd:#26304b;--ac:#7aa2ff;--acsoft:#1f2b4d;
+    --c1:#7aa2ff;--c1s:#1b2a52;--c2:#4ade9f;--c2s:#12372b;--c3:#fbbf4a;--c3s:#42300f;--c0:#a3aec6;--c0s:#252e45;
+    --hl:#2e2a12;--sh:none}}
   *{box-sizing:border-box}
-  body{margin:0;font-family:system-ui,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--tx);padding:16px;max-width:1100px;margin-inline:auto}
-  h1{font-size:1.3rem;margin:0}
-  .top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:14px}
-  .mut{color:var(--mut);font-size:.85rem}
-  button{background:var(--ac);color:#fff;border:0;border-radius:8px;padding:8px 14px;cursor:pointer}
-  .tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
-  .tabs button{background:var(--card);color:var(--tx);border:1px solid var(--bd)}
-  .tabs button.on{background:var(--ac);color:#fff}
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
-  .card{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:12px}
-  .card b{display:block;color:var(--mut);font-size:.8rem;margin-bottom:4px}
-  .card span{font-size:1rem;font-weight:600}
-  .wrap{overflow-x:auto;margin-top:22px;background:var(--card);border:1px solid var(--bd);border-radius:10px}
-  table{border-collapse:collapse;width:100%;font-size:.85rem}
-  th,td{border-bottom:1px solid var(--bd);padding:8px;text-align:center}
-  th{background:var(--ac);color:#fff}
-  td:first-child{font-weight:700;text-align:left;white-space:nowrap}
-  .hoje{background:var(--hl)}
-  th.hoje{background:#c9a400;color:#000}
-  #erro{color:#c0392b;font-weight:600}
+  body{margin:0;background:var(--bg);color:var(--tx);font-family:Inter,system-ui,"Segoe UI",Arial,sans-serif;line-height:1.4}
+  .page{max-width:1120px;margin:0 auto;padding:20px 16px 48px}
+  header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+  h1{font-size:1.35rem;margin:0;letter-spacing:-.01em}
+  .sub{color:var(--mut);font-size:.85rem;margin-top:2px}
+  .btn{background:var(--ac);color:#fff;border:0;border-radius:10px;padding:9px 16px;font-weight:600;cursor:pointer}
+  @media (prefers-color-scheme:dark){.btn{color:#0b1020}}
+  .btn:disabled{opacity:.6;cursor:wait}
+
+  .pills{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:16px;scrollbar-width:none}
+  .pill{flex:0 0 auto;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:999px;padding:7px 14px;font-size:.85rem;cursor:pointer;font-weight:500}
+  .pill.on{background:var(--ac);border-color:var(--ac);color:#fff}
+  @media (prefers-color-scheme:dark){.pill.on{color:#0b1020}}
+  .pill small{opacity:.8;font-size:.7rem;margin-left:4px}
+
+  .hero{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:0 0 12px}
+  .hero h2{margin:0;font-size:1.15rem}
+  .tag{background:var(--hl);color:var(--tx);border-radius:6px;padding:2px 8px;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+  .card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px;box-shadow:var(--sh)}
+  .card h3{margin:0 0 10px;font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;color:var(--mut)}
+  .loc{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:10px;margin-top:6px}
+  .loc:first-of-type{margin-top:0}
+  .loc i{width:9px;height:9px;border-radius:50%;margin-top:6px;flex:0 0 auto}
+  .loc b{display:block;font-size:.98rem}
+  .loc span{display:block;font-size:.8rem;color:var(--mut)}
+  .k1{background:var(--c1s)}.k1 i{background:var(--c1)}
+  .k2{background:var(--c2s)}.k2 i{background:var(--c2)}
+  .k3{background:var(--c3s)}.k3 i{background:var(--c3)}
+  .k0{background:var(--c0s)}.k0 i{background:var(--c0)}
+  .none{color:var(--mut);font-size:.9rem;padding:8px 10px}
+
+  .legend{display:flex;gap:14px;flex-wrap:wrap;margin:22px 0 8px;font-size:.8rem;color:var(--mut)}
+  .legend em{font-style:normal;display:inline-flex;align-items:center;gap:6px}
+  .legend i{width:9px;height:9px;border-radius:50%;display:inline-block}
+
+  h2.sec{font-size:1.05rem;margin:26px 0 10px}
+  .wrap{overflow-x:auto;background:var(--card);border:1px solid var(--bd);border-radius:14px;box-shadow:var(--sh)}
+  table{border-collapse:separate;border-spacing:0;width:100%;min-width:900px;font-size:.8rem}
+  th,td{padding:10px;border-bottom:1px solid var(--bd);vertical-align:top;text-align:left}
+  tr:last-child td{border-bottom:0}
+  thead th{background:var(--acsoft);font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);position:sticky;top:0}
+  th:first-child,td:first-child{position:sticky;left:0;background:var(--card);font-weight:700;z-index:1;min-width:120px;border-right:1px solid var(--bd)}
+  thead th:first-child{background:var(--acsoft)}
+  .col-hoje{background:var(--hl)}
+  thead th.col-hoje{background:var(--hl);color:var(--tx)}
+  td .loc{padding:5px 8px}
+  td .loc b{font-size:.8rem}
+  td .loc span{font-size:.7rem}
+  #erro{background:#fde8e8;color:#9b1c1c;border-radius:10px;padding:10px 14px;margin-bottom:14px;display:none;font-weight:600}
+  .skel{color:var(--mut);padding:20px}
 </style>
 </head>
 <body>
-<div class="top">
-  <div><h1>Devolução de containers · Manaus - AM</h1>
-  <div class="mut" id="info">Carregando…</div></div>
-  <button onclick="carregar()">Atualizar</button>
-</div>
-<div id="erro"></div>
-<div class="tabs" id="tabs"></div>
-<div class="grid" id="cards"></div>
-<div class="wrap"><table id="tab"></table></div>
-<script>
-// >>> Se publicar a API em outro domínio, coloque a URL completa aqui <<<
-const API = "/api/devolucao";
-const ORDEM = ["DOM","SEG","TER","QUA","QUI","SEX","SAB"]; // índice = Date.getDay()
-const chave = d => d.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toUpperCase().slice(0,3);
-let dados=null, sel=null;
+<div class="page">
+  <header>
+    <div>
+      <h1>Devolução de containers · Manaus - AM</h1>
+      <div class="sub" id="info">Carregando…</div>
+    </div>
+    <button class="btn" id="btn" onclick="carregar()">Atualizar</button>
+  </header>
 
-function hojeChave(){
-  const wd = new Intl.DateTimeFormat("en-US",{weekday:"short",timeZone:"America/Manaus"}).format(new Date());
-  return {Sun:"DOM",Mon:"SEG",Tue:"TER",Wed:"QUA",Thu:"QUI",Fri:"SEX",Sat:"SAB"}[wd];
+  <div id="erro"></div>
+  <div class="pills" id="pills"></div>
+  <div class="hero"><h2 id="titulo"></h2><span class="tag" id="tag" hidden>Hoje</span></div>
+  <div class="grid" id="cards"><div class="skel">Carregando…</div></div>
+
+  <div class="legend">
+    <em><i style="background:var(--c1)"></i>Tomiasi</em>
+    <em><i style="background:var(--c2)"></i>Delima</em>
+    <em><i style="background:var(--c3)"></i>Super Terminais</em>
+  </div>
+
+  <h2 class="sec">Semana completa</h2>
+  <div class="wrap"><table id="tab"></table></div>
+</div>
+
+<script>
+// >>> Se a API ficar em outro domínio, coloque a URL completa aqui <<<
+const API = "/api/devolucao";
+
+const norm = s => s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toUpperCase();
+const chave = d => norm(d).slice(0,3);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const TZ = "America/Manaus";
+const SEMANA = {Sun:"DOM",Mon:"SEG",Tue:"TER",Wed:"QUA",Thu:"QUI",Fri:"SEX",Sat:"SAB"};
+const hojeChave = () => SEMANA[new Intl.DateTimeFormat("en-US",{weekday:"short",timeZone:TZ}).format(new Date())];
+const bonito = d => { const t = d.replace("-FEIRA","").toLowerCase().replace("sabado","sábado").replace("terca","terça");
+  return t.charAt(0).toUpperCase()+t.slice(1) + (/dom|sáb/.test(t) ? "" : "-feira"); };
+
+let dados = null, sel = null;
+
+// Quebra a célula em locais: "Super Terminais das 8 as 18h / Pátio 10 - Delima das 18h" -> 2 itens
+function locais(txt){
+  const t = (txt||"").trim();
+  if(!t || /^[-–—]+$/.test(t)) return [];
+  return t.split(/\s*\/\s*/).filter(Boolean).map(seg => {
+    const m = seg.match(/^(.*?)(\s+(?:das?|a partir)\s+.*)?$/i);
+    const nome = (m[1]||seg).trim(), hora = (m[2]||"").trim();
+    const n = norm(nome);
+    const k = n.includes("TOMIASI") ? 1 : n.includes("DELIMA") ? 2 : n.includes("SUPER TERMINAIS") ? 3 : 0;
+    return {nome, hora, k};
+  });
 }
+const htmlLocais = (txt, vazio) => {
+  const l = locais(txt);
+  if(!l.length) return `<div class="none">${vazio}</div>`;
+  return l.map(x => `<div class="loc k${x.k}"><i></i><div><b>${esc(x.nome)}</b>${x.hora?`<span>${esc(x.hora)}</span>`:""}</div></div>`).join("");
+};
+
 async function carregar(){
-  document.getElementById("erro").textContent="";
+  const btn = document.getElementById("btn"), erro = document.getElementById("erro");
+  btn.disabled = true; erro.style.display = "none";
   try{
     const r = await fetch(API); const j = await r.json();
-    if(!r.ok) throw new Error(j.erro||"Falha ao consultar o portal");
-    dados=j; sel=sel||hojeChave(); desenha();
-  }catch(e){ document.getElementById("erro").textContent="Erro: "+e.message; }
+    if(!r.ok) throw new Error(j.erro || "Falha ao consultar o portal");
+    dados = j; sel = sel || hojeChave(); desenha();
+  }catch(e){
+    erro.textContent = "Erro: " + e.message; erro.style.display = "block";
+    document.getElementById("info").textContent = "Não foi possível atualizar.";
+  }
+  btn.disabled = false;
 }
+
 function desenha(){
-  const hoje=hojeChave();
-  const idx = dados.dias.map(chave);
-  document.getElementById("info").textContent="Atualizado em "+new Date(dados.atualizadoEm).toLocaleString("pt-BR",{timeZone:"America/Manaus"});
-  document.getElementById("tabs").innerHTML = dados.dias.map((d,i)=>
-    `<button class="${idx[i]===sel?'on':''}" onclick="sel='${idx[i]}';desenha()">${d.replace('-FEIRA','')}${idx[i]===hoje?' (hoje)':''}</button>`).join("");
+  const hoje = hojeChave(), idx = dados.dias.map(chave);
+  if(!idx.includes(sel)) sel = idx.includes(hoje) ? hoje : idx[0];
   const i = idx.indexOf(sel);
-  document.getElementById("cards").innerHTML = dados.rows.map(r=>`<div class="card"><b>${r.tipo}</b><span>${r.valores[i]||'-'}</span></div>`).join("");
+
+  document.getElementById("info").textContent = "Atualizado em " +
+    new Date(dados.atualizadoEm).toLocaleString("pt-BR",{timeZone:TZ,dateStyle:"short",timeStyle:"short"}) +
+    " · fonte: Portal de Agendamentos";
+
+  document.getElementById("pills").innerHTML = dados.dias.map((d,k) =>
+    `<button class="pill ${idx[k]===sel?"on":""}" onclick="sel='${idx[k]}';desenha()">${bonito(d).replace("-feira","")}${idx[k]===hoje?"<small>hoje</small>":""}</button>`).join("");
+
+  const dataHoje = new Intl.DateTimeFormat("pt-BR",{weekday:"long",day:"numeric",month:"long",timeZone:TZ}).format(new Date());
+  document.getElementById("titulo").textContent = sel===hoje ? dataHoje.charAt(0).toUpperCase()+dataHoje.slice(1) : bonito(dados.dias[i]);
+  document.getElementById("tag").hidden = sel!==hoje;
+
+  document.getElementById("cards").innerHTML = dados.rows.map(r =>
+    `<div class="card"><h3>${esc(r.tipo)}</h3>${htmlLocais(r.valores[i], "Sem devolução neste dia")}</div>`).join("");
+
   document.getElementById("tab").innerHTML =
-    "<tr><th>Tipo/Dia</th>"+dados.dias.map((d,k)=>`<th class="${idx[k]===hoje?'hoje':''}">${d}</th>`).join("")+"</tr>"+
-    dados.rows.map(r=>`<tr><td>${r.tipo}</td>`+r.valores.map((v,k)=>`<td class="${idx[k]===hoje?'hoje':''}">${v}</td>`).join("")+"</tr>").join("");
+    "<thead><tr><th>Tipo</th>" + dados.dias.map((d,k)=>`<th class="${idx[k]===hoje?"col-hoje":""}">${esc(bonito(d))}</th>`).join("") + "</tr></thead><tbody>" +
+    dados.rows.map(r => `<tr><td>${esc(r.tipo)}</td>` +
+      r.valores.map((v,k)=>`<td class="${idx[k]===hoje?"col-hoje":""}">${htmlLocais(v,"—")}</td>`).join("") + "</tr>").join("") + "</tbody>";
 }
 carregar();
 </script>
