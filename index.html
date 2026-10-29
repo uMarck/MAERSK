@@ -44,7 +44,7 @@
   .loc:first-of-type{margin-top:0}
   .loc i{width:9px;height:9px;border-radius:50%;margin-top:6px;flex:0 0 auto}
   .loc b{display:block;font-size:.98rem}
-  .loc span{display:block;font-size:.8rem;color:var(--mut)}
+  .loc>div span{display:block;font-size:.8rem;color:var(--mut)}
   .k1{background:var(--c1s)}.k1 i{background:var(--c1)}
   .k2{background:var(--c2s)}.k2 i{background:var(--c2)}
   .k3{background:var(--c3s)}.k3 i{background:var(--c3)}
@@ -67,7 +67,16 @@
   thead th.col-hoje{background:var(--hl);color:var(--tx)}
   td .loc{padding:5px 8px}
   td .loc b{font-size:.8rem}
-  td .loc span{font-size:.7rem}
+  td .loc>div span{font-size:.7rem}
+  .map{margin-left:auto;flex:0 0 auto;align-self:center;display:inline-flex;align-items:center;gap:5px;text-decoration:none;
+    background:var(--card);color:var(--tx);border:1px solid var(--bd);border-radius:999px;padding:5px 10px;font-size:.75rem;font-weight:600}
+  .map:hover{border-color:var(--ac);color:var(--ac)}
+  .map svg{width:14px;height:14px;flex:0 0 auto}
+  td .map{padding:5px;gap:0}
+  td .map span{display:none}
+  .mark{text-align:center;color:var(--mut);font-size:.8rem;margin-top:22px;opacity:.85}
+  .mark a{color:inherit;font-weight:700;text-decoration:none;border-bottom:1px dashed currentColor}
+  .mark a:hover{color:var(--ac)}
   #erro{background:#fde8e8;color:#9b1c1c;border-radius:10px;padding:10px 14px;margin-bottom:14px;display:none;font-weight:600}
   .skel{color:var(--mut);padding:20px}
 </style>
@@ -95,9 +104,9 @@
 
   <h2 class="sec">Semana completa</h2>
   <div class="wrap"><table id="tab"></table></div>
-  <br>
-  <p>Created by Ryan Marck</p>
-  <br>
+
+  <!-- Marca d'água -->
+  <div class="mark">Created by <a href="https://www.instagram.com/itsm4rck/" target="_blank" rel="noopener noreferrer">Ryan Marck</a></div>
 </div>
 
 <script>
@@ -113,6 +122,20 @@ const hojeChave = () => SEMANA[new Intl.DateTimeFormat("en-US",{weekday:"short",
 const bonito = d => { const t = d.replace("-FEIRA","").toLowerCase().replace("sabado","sábado").replace("terca","terça");
   return t.charAt(0).toUpperCase()+t.slice(1) + (/dom|sáb/.test(t) ? "" : "-feira"); };
 
+// >>> LINKS DO GOOGLE MAPS de cada depot/local (troque aqui se algum endereço mudar) <<<
+const MAPAS = {
+  SUPER:  "https://maps.app.goo.gl/4Zjyc4jL34HCDjw58", // BURACÃO (Super Terminais)
+  PATIO10:"https://maps.app.goo.gl/nhwCzqraYZRfFEXf6", // Pátio 10 (Delima)
+  PATIO2: "https://maps.app.goo.gl/WnUPaS7q7zVe1S918"  // Pátio 2 (Tomiasi)
+};
+const linkMapa = n => {
+  if(n.includes("SUPER TERMINAIS")) return MAPAS.SUPER;
+  if(/PATIO\s*0?10\b/.test(n) || n.includes("DELIMA")) return MAPAS.PATIO10;
+  if(/PATIO\s*0?2\b/.test(n) || n.includes("TOMIASI")) return MAPAS.PATIO2;
+  return "";
+};
+const PIN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>';
+
 let dados = null, sel = null;
 
 // Quebra a célula em locais: "Super Terminais das 8 as 18h / Pátio 10 - Delima das 18h" -> 2 itens
@@ -124,13 +147,13 @@ function locais(txt){
     const nome = (m[1]||seg).trim(), hora = (m[2]||"").trim();
     const n = norm(nome);
     const k = n.includes("TOMIASI") ? 1 : n.includes("DELIMA") ? 2 : n.includes("SUPER TERMINAIS") ? 3 : 0;
-    return {nome, hora, k};
+    return {nome, hora, k, url: linkMapa(n)};
   });
 }
 const htmlLocais = (txt, vazio) => {
   const l = locais(txt);
   if(!l.length) return `<div class="none">${vazio}</div>`;
-  return l.map(x => `<div class="loc k${x.k}"><i></i><div><b>${esc(x.nome)}</b>${x.hora?`<span>${esc(x.hora)}</span>`:""}</div></div>`).join("");
+  return l.map(x => `<div class="loc k${x.k}"><i></i><div><b>${esc(x.nome)}</b>${x.hora?`<span>${esc(x.hora)}</span>`:""}</div>${x.url?`<a class="map" href="${x.url}" target="_blank" rel="noopener noreferrer" title="Abrir no mapa" aria-label="Abrir ${esc(x.nome)} no mapa">${PIN}<span>Mapa</span></a>`:""}</div>`).join("");
 };
 
 async function carregar(){
