@@ -1,1 +1,16 @@
-{ "functions": { "api/devolucao.js": { "maxDuration": 15 } } }
+{
+  "functions": {
+    "api/devolucao.js": {
+      "maxDuration": 15
+    },
+    "api/cron.js": {
+      "maxDuration": 15
+    }
+  },
+  "crons": [
+    {
+      "path": "/api/cron",
+      "schedule": "0 12 * * *"
+    }
+  ]
+}

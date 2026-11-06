@@ -1,6 +1,9 @@
 {
   "name": "devolucao-manaus",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
-  "dependencies": { "cheerio": "1.0.0" }
+  "dependencies": {
+    "cheerio": "1.0.0",
+    "@vercel/blob": "^1.1.1"
+  }
 }

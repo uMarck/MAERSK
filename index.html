@@ -1,200 +1,54 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Devolução de Containers · Manaus</title>
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#07172f"><title>Maersk | Devolução de Contêineres — Manaus</title>
 <style>
-  :root{
-    --bg:#eef2f8;--card:#fff;--tx:#0f1b33;--mut:#6b7794;--bd:#dde4f0;--ac:#1d4ed8;--acsoft:#e3ebff;
-    --c1:#2563eb;--c1s:#e0eaff;   /* Tomiasi */
-    --c2:#059669;--c2s:#d9f5ea;   /* Delima */
-    --c3:#d97706;--c3s:#ffedd2;   /* Super Terminais */
-    --c0:#64748b;--c0s:#e8ecf3;   /* outros */
-    --hl:#fff6cf;--sh:0 1px 2px rgba(15,27,51,.06),0 6px 18px rgba(15,27,51,.06)
-  }
-  @media (prefers-color-scheme:dark){:root{
-    --bg:#0b1020;--card:#151c30;--tx:#e9eefb;--mut:#93a0bf;--bd:#26304b;--ac:#7aa2ff;--acsoft:#1f2b4d;
-    --c1:#7aa2ff;--c1s:#1b2a52;--c2:#4ade9f;--c2s:#12372b;--c3:#fbbf4a;--c3s:#42300f;--c0:#a3aec6;--c0s:#252e45;
-    --hl:#2e2a12;--sh:none}}
-  *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--tx);font-family:Inter,system-ui,"Segoe UI",Arial,sans-serif;line-height:1.4}
-  .page{max-width:1120px;margin:0 auto;padding:20px 16px 48px}
-  header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:18px}
-  h1{font-size:1.35rem;margin:0;letter-spacing:-.01em}
-  .sub{color:var(--mut);font-size:.85rem;margin-top:2px}
-  .btn{background:var(--ac);color:#fff;border:0;border-radius:10px;padding:9px 16px;font-weight:600;cursor:pointer}
-  @media (prefers-color-scheme:dark){.btn{color:#0b1020}}
-  .btn:disabled{opacity:.6;cursor:wait}
-
-  .pills{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:16px;scrollbar-width:none}
-  .pill{flex:0 0 auto;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:999px;padding:7px 14px;font-size:.85rem;cursor:pointer;font-weight:500}
-  .pill.on{background:var(--ac);border-color:var(--ac);color:#fff}
-  @media (prefers-color-scheme:dark){.pill.on{color:#0b1020}}
-  .pill small{opacity:.8;font-size:.7rem;margin-left:4px}
-
-  .hero{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:0 0 12px}
-  .hero h2{margin:0;font-size:1.15rem}
-  .tag{background:var(--hl);color:var(--tx);border-radius:6px;padding:2px 8px;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
-
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
-  .card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px;box-shadow:var(--sh)}
-  .card h3{margin:0 0 10px;font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;color:var(--mut)}
-  .loc{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:10px;margin-top:6px}
-  .loc:first-of-type{margin-top:0}
-  .loc i{width:9px;height:9px;border-radius:50%;margin-top:6px;flex:0 0 auto}
-  .loc b{display:block;font-size:.98rem}
-  .loc>div span{display:block;font-size:.8rem;color:var(--mut)}
-  .k1{background:var(--c1s)}.k1 i{background:var(--c1)}
-  .k2{background:var(--c2s)}.k2 i{background:var(--c2)}
-  .k3{background:var(--c3s)}.k3 i{background:var(--c3)}
-  .k0{background:var(--c0s)}.k0 i{background:var(--c0)}
-  .none{color:var(--mut);font-size:.9rem;padding:8px 10px}
-
-  .legend{display:flex;gap:14px;flex-wrap:wrap;margin:22px 0 8px;font-size:.8rem;color:var(--mut)}
-  .legend em{font-style:normal;display:inline-flex;align-items:center;gap:6px}
-  .legend i{width:9px;height:9px;border-radius:50%;display:inline-block}
-
-  h2.sec{font-size:1.05rem;margin:26px 0 10px}
-  .wrap{overflow-x:auto;background:var(--card);border:1px solid var(--bd);border-radius:14px;box-shadow:var(--sh)}
-  table{border-collapse:separate;border-spacing:0;width:100%;min-width:900px;font-size:.8rem}
-  th,td{padding:10px;border-bottom:1px solid var(--bd);vertical-align:top;text-align:left}
-  tr:last-child td{border-bottom:0}
-  thead th{background:var(--acsoft);font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);position:sticky;top:0}
-  th:first-child,td:first-child{position:sticky;left:0;background:var(--card);font-weight:700;z-index:1;min-width:120px;border-right:1px solid var(--bd)}
-  thead th:first-child{background:var(--acsoft)}
-  .col-hoje{background:var(--hl)}
-  thead th.col-hoje{background:var(--hl);color:var(--tx)}
-  td .loc{padding:5px 8px}
-  td .loc b{font-size:.8rem}
-  td .loc>div span{font-size:.7rem}
-  .map{margin-left:auto;flex:0 0 auto;align-self:center;display:inline-flex;align-items:center;gap:5px;text-decoration:none;
-    background:var(--card);color:var(--tx);border:1px solid var(--bd);border-radius:999px;padding:5px 10px;font-size:.75rem;font-weight:600}
-  .map:hover{border-color:var(--ac);color:var(--ac)}
-  .map svg{width:14px;height:14px;flex:0 0 auto}
-  td .map{padding:5px;gap:0}
-  td .map span{display:none}
-  .mark{text-align:center;color:var(--mut);font-size:.8rem;margin-top:22px;opacity:.85}
-  .mark a{color:inherit;font-weight:700;text-decoration:none;border-bottom:1px dashed currentColor}
-  .mark a:hover{color:var(--ac)}
-  #erro{background:#fde8e8;color:#9b1c1c;border-radius:10px;padding:10px 14px;margin-bottom:14px;display:none;font-weight:600}
-  .skel{color:var(--mut);padding:20px}
-</style>
-</head>
-<body>
-<div class="page">
-  <header>
-    <div>
-      <h1>Devolução de containers · Manaus - AM</h1>
-      <div class="sub" id="info">Carregando…</div>
-    </div>
-    <button class="btn" id="btn" onclick="carregar()">Atualizar</button>
-  </header>
-
-  <div id="erro"></div>
-  <div class="pills" id="pills"></div>
-  <div class="hero"><h2 id="titulo"></h2><span class="tag" id="tag" hidden>Hoje</span></div>
-  <div class="grid" id="cards"><div class="skel">Carregando…</div></div>
-
-  <div class="legend">
-    <em><i style="background:var(--c1)"></i>Tomiasi</em>
-    <em><i style="background:var(--c2)"></i>Delima</em>
-    <em><i style="background:var(--c3)"></i>Super Terminais</em>
-  </div>
-
-  <h2 class="sec">Semana completa</h2>
-  <div class="wrap"><table id="tab"></table></div>
-
-  <!-- Marca d'água -->
-  <div class="mark">Created by <a href="https://www.instagram.com/itsm4rck/" target="_blank" rel="noopener noreferrer">Ryan Marck</a></div>
-</div>
-
+:root{color-scheme:dark;--bg:#071426;--panel:#101f36;--panel2:#142640;--stroke:#263a55;--txt:#eff5ff;--mut:#9aacbf;--accent:#4da3ff;--green:#42d3a4;--orange:#ffc076;--yellow:#ffdc75}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(160deg,#081a30,#071426 40%,#0a1424);color:var(--txt);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;font-size:14px}button,input{font:inherit}button{cursor:pointer}.shell{max-width:1300px;margin:auto;padding:22px 22px 56px}.top{display:flex;justify-content:space-between;align-items:center;gap:20px;padding-bottom:18px;border-bottom:1px solid var(--stroke)}.brand{display:flex;gap:13px;align-items:center}.logo{width:46px;height:46px;display:grid;place-items:center;color:#fff;background:#1877d7;border-radius:13px;font-size:28px;font-weight:900}.eyebrow{text-transform:uppercase;letter-spacing:.18em;color:var(--accent);font-size:10px;font-weight:800}.brand h1{margin:4px 0;font-size:18px;letter-spacing:-.03em}.muted{color:var(--mut)}.actions{display:flex;gap:10px;align-items:center}.btn{border:1px solid var(--stroke);background:var(--panel2);color:var(--txt);padding:11px 16px;border-radius:10px;font-weight:750}.btn.primary{background:#2379d3;border-color:#2379d3}.btn:hover{filter:brightness(1.13)}.btn:disabled{opacity:.5;cursor:wait}.mainhead{margin:28px 0 22px;display:flex;justify-content:space-between;align-items:end;gap:16px;flex-wrap:wrap}.mainhead h2{font-size:32px;letter-spacing:-.045em;margin:4px 0 7px}.live{border:1px solid #235643;background:#123d31;color:#81e7be;border-radius:50px;padding:7px 12px;font-weight:700;font-size:12px}.live.warn{background:#442c18;border-color:#7a4b22;color:#ffd08d}.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:24px}.stat{background:var(--panel);border:1px solid var(--stroke);padding:17px 19px;border-radius:14px}.stat .value{font-size:23px;font-weight:800;letter-spacing:-.035em;margin-top:9px}.stat .label{color:var(--mut);font-size:12px}.layout{display:grid;grid-template-columns:1fr;gap:18px}.panel{border:1px solid var(--stroke);background:var(--panel);border-radius:16px;padding:20px}.sectionhead{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}.sectionhead h3{font-size:17px;letter-spacing:-.02em;margin:0}.days{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px}.day{min-width:85px;padding:9px 12px;border:1px solid var(--stroke);background:#0b1b31;border-radius:9px;color:var(--mut);font-size:12px;font-weight:800}.day.active{background:#2379d3;border-color:#2379d3;color:white}.day small{display:block;font-size:10px;font-weight:500;margin-top:3px}.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.type{background:#0b1a30;border:1px solid var(--stroke);border-radius:12px;padding:14px;min-height:120px}.type .type-title{font-size:12px;letter-spacing:.05em;color:var(--mut);font-weight:800;text-transform:uppercase;margin-bottom:12px}.depot{border:1px solid #2e527f;background:#122b4d;border-radius:8px;padding:10px;margin:7px 0}.depot.green{border-color:#286a59;background:#12382f}.depot.orange{border-color:#76512a;background:#3f2a1a}.depot .name{font-weight:800;font-size:13px}.depot .time{font-size:11px;color:#c3d2e6;margin-top:5px}.map{color:#8fc6ff;text-decoration:none;font-size:11px;display:inline-block;margin-top:6px}.empty{font-size:12px;color:#8296b0}.tabletools{display:flex;gap:8px;align-items:center}.search{border:1px solid var(--stroke);border-radius:9px;color:var(--txt);background:#09172b;padding:10px 12px;min-width:200px}.scroll{overflow-x:auto;border:1px solid var(--stroke);border-radius:10px}table{width:100%;min-width:1080px;border-collapse:collapse}th,td{padding:13px 11px;text-align:left;vertical-align:top;border-bottom:1px solid var(--stroke);border-right:1px solid #213149}thead th{background:#152e4f;color:#c2d5ec;font-size:11px;text-transform:uppercase;white-space:nowrap}tbody tr:last-child td{border-bottom:0}td:first-child,th:first-child{position:sticky;left:0;background:#12243d;min-width:145px;z-index:1;font-weight:800}th:first-child{z-index:2;background:#1b385b}td.today,th.today{background:#1c3550}.celltag{display:inline-block;border-radius:6px;padding:6px 8px;margin-bottom:6px;background:#183b68;color:#bfdfff;line-height:1.35;font-size:11px}.celltag.green{background:#184b3c;color:#a7f1d0}.celltag.orange{background:#51381d;color:#ffdaa4}.foot{margin-top:19px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:15px;color:#8294ae;font-size:12px}.foot a{color:#a7cfff}.notice{background:#49321c;border:1px solid #8c5c2c;border-radius:10px;padding:14px;margin-bottom:15px;color:#ffe0af}.hidden{display:none!important}a{color:inherit}.source{font-size:11px;color:var(--mut);margin-top:10px}@media(max-width:900px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.stats{grid-template-columns:1fr 1fr}.stats .stat:last-child{grid-column:1/-1}}@media(max-width:600px){.shell{padding:14px 12px 35px}.brand h1{font-size:15px}.logo{width:39px;height:39px}.top{align-items:flex-start}.actions{flex-direction:column;gap:6px}.btn{padding:9px 10px;font-size:12px}.mainhead h2{font-size:25px}.cards{grid-template-columns:1fr}.panel{padding:13px}.stats{gap:8px}.stat{padding:12px}.stat .value{font-size:17px}.tabletools{width:100%}.search{width:100%;min-width:0}.foot{justify-content:center;text-align:center}}@media print{body{background:#fff;color:#111}.actions,.days,.tabletools{display:none}.panel,.stat{break-inside:avoid}table{font-size:10px}.foot{color:#333}}
+</style></head><body><div class="shell">
+<header class="top"><div class="brand"><div class="logo">✳</div><div><div class="eyebrow">OPERAÇÃO DE CONTÊINERES</div><h1>MAERSK <span class="muted">/ Manaus</span></h1></div></div><div class="actions"><a class="btn" href="https://www.portalagendamentos.com.br/pt-br/site/devimportacao" target="_blank" rel="noopener noreferrer" style="text-decoration:none">↗ Portal oficial</a><button class="btn primary" id="refresh">↻ Atualizar</button></div></header>
+<section class="mainhead"><div><div class="eyebrow">CONSULTA OPERACIONAL • AMAZONAS</div><h2>Programação de devolução</h2><div class="muted">Depots por dia da semana, tipo e tamanho de contêiner</div></div><div class="live warn" id="badge">● Consultando programação</div></section>
+<div id="warning" class="notice hidden" role="alert"></div>
+<div class="stats"><div class="stat"><div class="label">REGIÃO DE CONSULTA</div><div class="value">Manaus · AM</div></div><div class="stat"><div class="label">CATEGORIAS DE CONTÊINER</div><div class="value" id="total">—</div></div><div class="stat"><div class="label">ÚLTIMA COLETA</div><div class="value" id="updated">—</div><div class="label" id="updateDate">Dados do Portal de Agendamentos</div></div></div>
+<main class="layout"><section class="panel"><div class="sectionhead"><h3>Depots do dia <span id="daytitle" class="muted"></span></h3></div><div class="days" id="days"></div><div class="cards" id="cards"><div class="empty">Buscando dados oficiais…</div></div></section>
+<section class="panel"><div class="sectionhead"><div><h3>Programação completa da semana</h3><div class="source">Fonte: Portal de Agendamentos · Devolução de Importação · Manaus</div></div><div class="tabletools"><input class="search" id="search" placeholder="Buscar tipo ou depot…" aria-label="Buscar tipo de contêiner ou depot"><button class="btn" id="print">Imprimir / PDF</button></div></div><div class="scroll"><table id="table"><tbody><tr><td>Consultando dados…</td></tr></tbody></table></div><div class="source">* Confira a programação oficial antes de encaminhar o contêiner: locais e horários podem mudar sem aviso.</div></section></main>
+<footer class="foot"><span>Fonte: <a href="https://www.portalagendamentos.com.br/pt-br/site/devimportacao" target="_blank" rel="noopener noreferrer">Portal de Agendamentos</a> · Armador Maersk</span><span>Created by <a href="https://www.instagram.com/itsm4rck/" target="_blank" rel="noopener noreferrer"><strong>Ryan Marck</strong></a></span></footer></div>
 <script>
-// >>> Se a API ficar em outro domínio, coloque a URL completa aqui <<<
-const API = "/api/devolucao";
-
-const norm = s => s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toUpperCase();
-const chave = d => norm(d).slice(0,3);
-const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const TZ = "America/Manaus";
-const SEMANA = {Sun:"DOM",Mon:"SEG",Tue:"TER",Wed:"QUA",Thu:"QUI",Fri:"SEX",Sat:"SAB"};
-const hojeChave = () => SEMANA[new Intl.DateTimeFormat("en-US",{weekday:"short",timeZone:TZ}).format(new Date())];
-const bonito = d => { const t = d.replace("-FEIRA","").toLowerCase().replace("sabado","sábado").replace("terca","terça");
-  return t.charAt(0).toUpperCase()+t.slice(1) + (/dom|sáb/.test(t) ? "" : "-feira"); };
-
-// >>> LINKS DO GOOGLE MAPS de cada depot/local (troque aqui se algum endereço mudar) <<<
-const MAPAS = {
-  SUPER:  "https://maps.app.goo.gl/4Zjyc4jL34HCDjw58", // BURACÃO (Super Terminais)
-  PATIO10:"https://maps.app.goo.gl/nhwCzqraYZRfFEXf6", // Pátio 10 (Delima)
-  PATIO2: "https://maps.app.goo.gl/WnUPaS7q7zVe1S918"  // Pátio 2 (Tomiasi)
-};
-const linkMapa = n => {
-  if(n.includes("SUPER TERMINAIS")) return MAPAS.SUPER;
-  if(/PATIO\s*0?10\b/.test(n) || n.includes("DELIMA")) return MAPAS.PATIO10;
-  if(/PATIO\s*0?2\b/.test(n) || n.includes("TOMIASI")) return MAPAS.PATIO2;
-  return "";
-};
-const PIN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>';
-
-let dados = null, sel = null;
-
-// Quebra a célula em locais: "Super Terminais das 8 as 18h / Pátio 10 - Delima das 18h" -> 2 itens
-function locais(txt){
-  const t = (txt||"").trim();
-  if(!t || /^[-–—]+$/.test(t)) return [];
-  return t.split(/\s*\/\s*/).filter(Boolean).map(seg => {
-    const m = seg.match(/^(.*?)(\s+(?:das?|a partir)\s+.*)?$/i);
-    const nome = (m[1]||seg).trim(), hora = (m[2]||"").trim();
-    const n = norm(nome);
-    const k = n.includes("TOMIASI") ? 1 : n.includes("DELIMA") ? 2 : n.includes("SUPER TERMINAIS") ? 3 : 0;
-    return {nome, hora, k, url: linkMapa(n)};
-  });
+const MAPS={super:"https://maps.app.goo.gl/4Zjyc4jL34HCDjw58",delima:"https://maps.app.goo.gl/nhwCzqraYZRfFEXf6",tomiasi:"https://maps.app.goo.gl/WnUPaS7q7zVe1S918"};
+const state={data:null,selected:0};
+const esc=s=>String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const key=s=>String(s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toUpperCase();
+const dayKeys=["DOM","SEG","TER","QUA","QUI","SEX","SAB"];
+function today(){const v=new Intl.DateTimeFormat("en-US",{weekday:"short",timeZone:"America/Manaus"}).format(new Date());return ({Sun:"DOM",Mon:"SEG",Tue:"TER",Wed:"QUA",Thu:"QUI",Fri:"SEX",Sat:"SAB"})[v]}
+function classify(name){let n=key(name);return n.includes("TOMIASI")?"tomiasi":n.includes("DELIMA")?"delima":n.includes("SUPER TERMINAIS")?"super":""}
+function entries(s){if(!s||/^[-–—\s]+$/.test(s))return [];return String(s).split(/\s*\/\s*/).map(x=>x.trim()).filter(Boolean).map(text=>({text,kind:classify(text)}))}
+function link(kind){return MAPS[kind]||""}
+function depotHTML(s){const parts=entries(s);return parts.length?parts.map(e=>{const m=e.text.match(/^(.*?)(\s+(?:das?|a partir|até|de)\s+\d.*)$/i);const name=(m?m[1]:e.text).trim(),time=m?m[2].trim():"";const kind=e.kind;const cls=kind==="delima"?"green":kind==="super"?"orange":"";return '<div class="depot '+cls+'"><div class="name">'+esc(name)+'</div>'+(time?'<div class="time">'+esc(time)+'</div>':'')+(link(kind)?'<a class="map" target="_blank" rel="noopener noreferrer" href="'+link(kind)+'">↗ Ver localização</a>':'')+'</div>'}).join(""):'<div class="empty">Sem devolução programada</div>'}
+function cellHTML(s){const parts=entries(s);return parts.length?parts.map(e=>'<span class="celltag '+(e.kind==="delima"?"green":e.kind==="super"?"orange":"")+'">'+esc(e.text)+'</span>').join(" "):'<span class="empty">—</span>'}
+function draw(){
+ const d=state.data;if(!d)return;const todayKey=today(),current=d.dias.findIndex(x=>key(x).slice(0,3)===todayKey);
+ document.getElementById("total").textContent=d.rows.length;
+ const date=new Date(d.atualizadoEm);document.getElementById("updated").textContent=date.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit",timeZone:"America/Manaus"});
+ document.getElementById("updateDate").textContent=date.toLocaleDateString("pt-BR",{timeZone:"America/Manaus"})+" · horário de Manaus";
+ document.getElementById("badge").textContent=d.desatualizado?"● Últimos dados salvos":"● Programação disponível";
+ document.getElementById("badge").classList.toggle("warn",!!d.desatualizado);
+ const idx=state.selected;document.getElementById("daytitle").textContent="· "+d.dias[idx];
+ document.getElementById("days").innerHTML=d.dias.map((day,i)=>'<button class="day '+(i===idx?"active":"")+'" data-day="'+i+'">'+esc(day)+'<small>'+(i===current?"HOJE":"Consultar")+'</small></button>').join("");
+ document.getElementById("cards").innerHTML=d.rows.map(row=>'<article class="type"><div class="type-title">'+esc(row.tipo)+'</div>'+depotHTML(row.valores[idx])+'</article>').join("");
+ const q=key(document.getElementById("search").value);const rows=d.rows.filter(r=>!q||key(r.tipo+" "+r.valores.join(" ")).includes(q));
+ document.getElementById("table").innerHTML='<thead><tr><th>Tipo / Dia</th>'+d.dias.map((s,i)=>'<th class="'+(i===current?"today":"")+'">'+esc(s)+(i===current?" · HOJE":"")+'</th>').join("")+'</tr></thead><tbody>'+rows.map(r=>'<tr><td>'+esc(r.tipo)+'</td>'+r.valores.map((v,i)=>'<td class="'+(i===current?"today":"")+'">'+cellHTML(v)+'</td>').join("")+'</tr>').join("")+'</tbody>';
+ document.querySelectorAll("[data-day]").forEach(b=>b.addEventListener("click",()=>{state.selected=Number(b.dataset.day);draw()}));
 }
-const htmlLocais = (txt, vazio) => {
-  const l = locais(txt);
-  if(!l.length) return `<div class="none">${vazio}</div>`;
-  return l.map(x => `<div class="loc k${x.k}"><i></i><div><b>${esc(x.nome)}</b>${x.hora?`<span>${esc(x.hora)}</span>`:""}</div>${x.url?`<a class="map" href="${x.url}" target="_blank" rel="noopener noreferrer" title="Abrir no mapa" aria-label="Abrir ${esc(x.nome)} no mapa">${PIN}<span>Mapa</span></a>`:""}</div>`).join("");
-};
-
-async function carregar(){
-  const btn = document.getElementById("btn"), erro = document.getElementById("erro");
-  btn.disabled = true; erro.style.display = "none";
-  try{
-    const r = await fetch(API); const j = await r.json();
-    if(!r.ok) throw new Error(j.erro || "Falha ao consultar o portal");
-    dados = j; sel = sel || hojeChave(); desenha();
-  }catch(e){
-    erro.textContent = "Erro: " + e.message; erro.style.display = "block";
-    document.getElementById("info").textContent = "Não foi possível atualizar.";
-  }
-  btn.disabled = false;
+async function load(force=false){
+ const button=document.getElementById("refresh");button.disabled=true;button.textContent=force?"↻ Atualizando…":"↻ Carregando…";
+ try{
+ const response=await fetch("/api/devolucao",{method:force?"POST":"GET",cache:"no-store"});const data=await response.json();
+ if(!response.ok&&!(data.dias&&data.rows))throw Error(data.erro||"Falha na consulta");
+ const first=!state.data;state.data=data;if(first){const i=data.dias.findIndex(x=>key(x).slice(0,3)===today());state.selected=Math.max(i,0)}
+ draw();const warning=document.getElementById("warning");const message=data.aviso||(response.status===429?data.erro:"");
+ warning.textContent=message||"";warning.classList.toggle("hidden",!message);
+ }catch(error){const warning=document.getElementById("warning");warning.textContent=error.message+". A atualização automática continuará tentando obter a programação oficial.";warning.classList.remove("hidden");document.getElementById("badge").textContent="● Fonte indisponível";document.getElementById("badge").classList.add("warn")}
+ finally{button.disabled=false;button.textContent="↻ Atualizar";}
 }
-
-function desenha(){
-  const hoje = hojeChave(), idx = dados.dias.map(chave);
-  if(!idx.includes(sel)) sel = idx.includes(hoje) ? hoje : idx[0];
-  const i = idx.indexOf(sel);
-
-  document.getElementById("info").textContent = "Atualizado em " +
-    new Date(dados.atualizadoEm).toLocaleString("pt-BR",{timeZone:TZ,dateStyle:"short",timeStyle:"short"}) +
-    " · fonte: Portal de Agendamentos";
-
-  document.getElementById("pills").innerHTML = dados.dias.map((d,k) =>
-    `<button class="pill ${idx[k]===sel?"on":""}" onclick="sel='${idx[k]}';desenha()">${bonito(d).replace("-feira","")}${idx[k]===hoje?"<small>hoje</small>":""}</button>`).join("");
-
-  const dataHoje = new Intl.DateTimeFormat("pt-BR",{weekday:"long",day:"numeric",month:"long",timeZone:TZ}).format(new Date());
-  document.getElementById("titulo").textContent = sel===hoje ? dataHoje.charAt(0).toUpperCase()+dataHoje.slice(1) : bonito(dados.dias[i]);
-  document.getElementById("tag").hidden = sel!==hoje;
-
-  document.getElementById("cards").innerHTML = dados.rows.map(r =>
-    `<div class="card"><h3>${esc(r.tipo)}</h3>${htmlLocais(r.valores[i], "Sem devolução neste dia")}</div>`).join("");
-
-  document.getElementById("tab").innerHTML =
-    "<thead><tr><th>Tipo</th>" + dados.dias.map((d,k)=>`<th class="${idx[k]===hoje?"col-hoje":""}">${esc(bonito(d))}</th>`).join("") + "</tr></thead><tbody>" +
-    dados.rows.map(r => `<tr><td>${esc(r.tipo)}</td>` +
-      r.valores.map((v,k)=>`<td class="${idx[k]===hoje?"col-hoje":""}">${htmlLocais(v,"—")}</td>`).join("") + "</tr>").join("") + "</tbody>";
-}
-carregar();
-</script>
-</body>
-</html>
+document.getElementById("refresh").addEventListener("click",()=>load(true));
+document.getElementById("search").addEventListener("input",draw);
+document.getElementById("print").addEventListener("click",()=>window.print());
+load();
+</script></body></html>

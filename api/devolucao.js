@@ -1,67 +1,83 @@
-// Função serverless (Vercel): lê o portal e devolve a tabela "Split de devolução - Manaus" em JSON.
 const cheerio = require("cheerio");
-
-// >>> TROQUE AQUI se o endereço do portal mudar <<<
-const URL_PORTAL = "https://www.portalagendamentos.com.br/pt-br/site/devimportacao";
-
-const limpa = (s) => (s || "").replace(/\u00a0/g, " ").replace(/\s*\n\s*/g, " ").replace(/\s+/g, " ").replace(/\/\s*\/+/g, "/").replace(/\s*\/\s*$/, "").trim();
-
-function parseManaus(html) {
-  const $ = cheerio.load(html);
-  let alvo = null;
-  // Tabela mais interna cujo texto contém o título do split de Manaus
-  $("table").each((_, t) => {
-    const $t = $(t);
-    if ($t.find("table").length) return;
-    const txt = limpa($t.text());
-    if (/Split de devolu[çc][aã]o\s*-\s*Manaus/i.test(txt)) alvo = $t;
-  });
-  if (!alvo) throw new Error("Tabela de Manaus não encontrada (o layout do portal pode ter mudado).");
-
-  alvo.find("br").replaceWith(" / ");
-  // Expande colspan para manter as colunas alinhadas
-  const linhas = [];
-  alvo.find("tr").each((_, tr) => {
-    const cel = [];
-    $(tr).children("td,th").each((__, td) => {
-      const span = parseInt($(td).attr("colspan") || "1", 10);
-      const txt = limpa($(td).text());
-      for (let i = 0; i < span; i++) cel.push(txt);
-    });
-    if (cel.length) linhas.push(cel);
-  });
-
-  const iHead = linhas.findIndex((l) => /tipo\s*\/\s*dia/i.test(l[0]));
-  if (iHead < 0) throw new Error("Cabeçalho 'Tipo/Dia' não encontrado.");
-
-  // O portal repete colunas (células com colspan=2 ou colunas duplicadas).
-  // Mantém só a primeira coluna de cada cabeçalho repetido em sequência.
-  const head = linhas[iHead];
-  const manter = head.map((_, i) => i).filter((i) => i === 0 || head[i].toUpperCase() !== head[i - 1].toUpperCase());
-  const dias = manter.slice(1).map((i) => head[i]);
-  const rows = linhas.slice(iHead + 1)
-    .filter((l) => l.length > 1 && l[0])
-    .map((l) => ({ tipo: l[0], valores: manter.slice(1).map((i) => l[i] || "-") }));
-  return { dias, rows };
+const { list, put } = require("@vercel/blob");
+const URL = "https://www.portalagendamentos.com.br/pt-br/site/devimportacao";
+const BLOB_PATH = "maersk/manaus-programacao.json";
+const tidy = (v) => (v || "").replace(/\u00a0/g," ").replace(/\s*\n\s*/g," ").replace(/\s+/g," ").replace(/\/\s*\/+/g,"/").trim();
+const normalize = (v) => tidy(v).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+function parseManaus(html){
+ const $=cheerio.load(html);
+ let table=null;
+ $("table").each((_, el)=>{
+   const t=$(el); if(t.find("table").length) return;
+   if(/split de devolu(?:ç|c)(?:ã|a)o\s*[-–]\s*manaus/i.test(normalize(t.text())) || /split de devolucao\s*[-–]\s*manaus/i.test(normalize(t.text()))) table=t;
+ });
+ if(!table) throw Error("Tabela de Manaus não encontrada no portal.");
+ table.find("br").replaceWith(" / ");
+ const lines=[];
+ table.find("tr").each((_, tr)=>{
+   const cells=[]; $(tr).children("th,td").each((__,td)=>{
+     const colspan=Math.max(1,Math.min(20,parseInt($(td).attr("colspan")||"1",10)||1));
+     const value=tidy($(td).text());
+     for(let i=0;i<colspan;i++)cells.push(value);
+   }); if(cells.length)lines.push(cells);
+ });
+ const headerAt=lines.findIndex(x=>/tipo\s*\/\s*dia/i.test(x[0]||""));
+ if(headerAt<0) throw Error("Cabeçalho Tipo/Dia não encontrado.");
+ const header=lines[headerAt];
+ const indexes=header.map((_,i)=>i).filter(i=>i===0||normalize(header[i])!==normalize(header[i-1]));
+ const dias=indexes.slice(1).map(i=>header[i]);
+ const rows=lines.slice(headerAt+1).filter(x=>x.length>1&&tidy(x[0])).map(x=>({tipo:tidy(x[0]),valores:indexes.slice(1).map(i=>tidy(x[i])||"-")}));
+ if(dias.length<5||rows.length<3||!rows.some(r=>/20|40/.test(r.tipo)))throw Error("Dados incompletos no portal; última programação mantida.");
+ return {dias,rows};
 }
-
-async function baixa() {
-  const r = await fetch(URL_PORTAL, { headers: { "User-Agent": "Mozilla/5.0 (compatible; DevolucaoManaus/1.0)" } });
-  if (!r.ok) throw new Error("Portal respondeu " + r.status);
-  const buf = await r.arrayBuffer();
-  let html = new TextDecoder("utf-8").decode(buf);
-  if (html.includes("\uFFFD")) html = new TextDecoder("windows-1252").decode(buf);
-  return html;
+async function fetchPortal(){
+ const controller=new AbortController();
+ const timer=setTimeout(()=>controller.abort(),8500);
+ try{
+  const response=await fetch(URL,{signal:controller.signal,headers:{"User-Agent":"Mozilla/5.0 (compatible; ConsultaDevolucaoManaus/2.0)","Accept":"text/html,application/xhtml+xml"},cache:"no-store"});
+  if(!response.ok)throw Error("Portal retornou HTTP "+response.status);
+  const buffer=await response.arrayBuffer();
+  let html=new TextDecoder("utf-8").decode(buffer);
+  if(html.includes("\uFFFD"))html=new TextDecoder("windows-1252").decode(buffer);
+  return parseManaus(html);
+ }finally{clearTimeout(timer)}
 }
-
-module.exports = async (req, res) => {
-  try {
-    const dados = parseManaus(await baixa());
-    // Cache de 1h no servidor da Vercel; o portal é consultado no máx. 1x/hora
-    res.setHeader("Cache-Control", "s-maxage=3600, stale-while-revalidate=86400");
-    res.status(200).json({ atualizadoEm: new Date().toISOString(), ...dados });
-  } catch (e) {
-    res.status(502).json({ erro: String(e.message || e) });
-  }
+async function snapshot(){
+ try{
+  const found=await list({prefix:BLOB_PATH,limit:10});
+  const item=found.blobs.find(x=>x.pathname===BLOB_PATH);
+  if(!item)return null;
+  const response=await fetch(item.downloadUrl||item.url,{cache:"no-store",signal:AbortSignal.timeout(4500)});
+  if(!response.ok)throw Error("Não foi possível ler o histórico");
+  const doc=await response.json();
+  return Array.isArray(doc.dias)&&Array.isArray(doc.rows)?doc:null;
+ }catch(e){console.error("Erro ao ler snapshot",e.message);return null}
+}
+async function refresh(){
+ const values=await fetchPortal();
+ const result={...values,atualizadoEm:new Date().toISOString(),fonte:URL};
+ await put(BLOB_PATH,JSON.stringify(result),{access:"public",allowOverwrite:true,addRandomSuffix:false,contentType:"application/json"});
+ return result;
+}
+module.exports=async(req,res)=>{
+ res.setHeader("Cache-Control","no-store");
+ if(!["GET","POST"].includes(req.method))return res.status(405).json({erro:"Método não permitido"});
+ const isCron=req.url?.startsWith("/api/cron");
+ if(isCron && (!process.env.CRON_SECRET||req.headers.authorization!=="Bearer "+process.env.CRON_SECRET))return res.status(401).json({erro:"Não autorizado"});
+ if(req.method==="POST"&&!isCron){
+   const previous=await snapshot();
+   if(previous&&Date.now()-Date.parse(previous.atualizadoEm)<120000)return res.status(429).json({erro:"Atualização recente. Tente novamente em 2 minutos.",...previous});
+ }
+ if(req.method==="GET"&&!isCron){
+   const previous=await snapshot();
+   if(previous)return res.status(200).json({...previous,origem:"historico"});
+ }
+ try{return res.status(200).json({...await refresh(),origem:"portal"})}
+ catch(e){
+   console.error("Consulta Maersk:",e.message);
+   const previous=await snapshot();
+   if(previous)return res.status(200).json({...previous,desatualizado:true,aviso:"Portal indisponível: exibindo última programação salva.",erroAtualizacao:e.message});
+   return res.status(503).json({erro:"Portal temporariamente indisponível e ainda não há uma programação salva.",detalhe:e.message});
+ }
 };
-module.exports.parseManaus = parseManaus;
+module.exports.parseManaus=parseManaus;
