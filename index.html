@@ -27,8 +27,9 @@ function draw(){
  document.getElementById("total").textContent=d.rows.length;
  const date=new Date(d.atualizadoEm);document.getElementById("updated").textContent=date.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit",timeZone:"America/Manaus"});
  document.getElementById("updateDate").textContent=date.toLocaleDateString("pt-BR",{timeZone:"America/Manaus"})+" · horário de Manaus";
- document.getElementById("badge").textContent=d.desatualizado?"● Últimos dados salvos":"● Programação disponível";
- document.getElementById("badge").classList.toggle("warn",!!d.desatualizado);
+ const vencido=!!d.desatualizado||!Number.isFinite(date.getTime())||(Date.now()-date.getTime()>36*60*60*1000);
+ document.getElementById("badge").textContent=vencido?"● Últimos dados salvos":"● Programação atualizada";
+ document.getElementById("badge").classList.toggle("warn",vencido);
  const idx=state.selected;document.getElementById("daytitle").textContent="· "+d.dias[idx];
  document.getElementById("days").innerHTML=d.dias.map((day,i)=>'<button class="day '+(i===idx?"active":"")+'" data-day="'+i+'">'+esc(day)+'<small>'+(i===current?"HOJE":"Consultar")+'</small></button>').join("");
  document.getElementById("cards").innerHTML=d.rows.map(row=>'<article class="type"><div class="type-title">'+esc(row.tipo)+'</div>'+depotHTML(row.valores[idx])+'</article>').join("");
@@ -42,7 +43,7 @@ async function load(force=false){
  const response=await fetch("/api/devolucao",{method:force?"POST":"GET",cache:"no-store"});const data=await response.json();
  if(!response.ok&&!(data.dias&&data.rows))throw Error(data.erro||"Falha na consulta");
  const first=!state.data;state.data=data;if(first){const i=data.dias.findIndex(x=>key(x).slice(0,3)===today());state.selected=Math.max(i,0)}
- draw();const warning=document.getElementById("warning");const message=data.aviso||(response.status===429?data.erro:"");
+ draw();const warning=document.getElementById("warning");const age=Date.now()-new Date(data.atualizadoEm).getTime();const message=data.aviso||(age>36*60*60*1000?"A última coleta tem mais de 36 horas. Confirme a programação no portal oficial antes de encaminhar o contêiner.":"")||(response.status===429?data.erro:"");
  warning.textContent=message||"";warning.classList.toggle("hidden",!message);
  }catch(error){const warning=document.getElementById("warning");warning.textContent=error.message+". A atualização automática continuará tentando obter a programação oficial.";warning.classList.remove("hidden");document.getElementById("badge").textContent="● Fonte indisponível";document.getElementById("badge").classList.add("warn")}
  finally{button.disabled=false;button.textContent="↻ Atualizar";}
