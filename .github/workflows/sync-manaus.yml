@@ -1,0 +1,40 @@
+name: Sincronizar Maersk Manaus
+on:
+  schedule:
+    # Diariamente após 08:00 de Manaus (UTC-4); Github pode atrasar alguns minutos.
+    - cron: "17 12 * * *"
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: sync-maersk-manaus
+  cancel-in-progress: false
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Configurar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Instalar dependências
+        run: npm install --no-audit --no-fund
+      - name: Atualizar somente se a fonte oficial responder
+        run: node scripts/sync.js
+      - name: Versionar programação
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/manaus.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Atualiza programação Maersk Manaus"
+            git push
+          else
+            echo "Sem mudanças na programação."
+          fi

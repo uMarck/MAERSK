@@ -1,16 +1,11 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "functions": {
     "api/devolucao.js": {
-      "maxDuration": 15
+      "maxDuration": 60
     },
     "api/cron.js": {
       "maxDuration": 15
     }
-  },
-  "crons": [
-    {
-      "path": "/api/cron",
-      "schedule": "0 12 * * *"
-    }
-  ]
+  }
 }

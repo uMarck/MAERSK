@@ -1,1 +1,2 @@
-const handler=require("./devolucao");module.exports=async(req,res)=>{req.url="/api/cron";return handler(req,res)};
+// O agendamento diário agora é um GitHub Action com snapshot versionado.
+module.exports=(_req,res)=>res.status(410).json({erro:"Rotina migrada para GitHub Actions; consulte /api/devolucao."});

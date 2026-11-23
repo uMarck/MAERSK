@@ -1,9 +1,11 @@
 {
   "name": "devolucao-manaus",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "private": true,
+  "scripts": {
+    "sync": "node scripts/sync.js"
+  },
   "dependencies": {
-    "cheerio": "1.0.0",
-    "@vercel/blob": "^1.1.1"
+    "cheerio": "1.0.0"
   }
 }

@@ -1,0 +1,90 @@
+{
+  "dias": [
+    "SEGUNDA-FEIRA",
+    "TERÇA-FEIRA",
+    "QUARTA-FEIRA",
+    "QUINTA-FEIRA",
+    "SEXTA-FEIRA",
+    "SÁBADO",
+    "DOMINGO"
+  ],
+  "rows": [
+    {
+      "tipo": "20 DRY",
+      "valores": [
+        "Pátio 2 - Tomiasi",
+        "Pátio 2 - Tomiasi",
+        "Pátio 2 - Tomiasi",
+        "Pátio 2 - Tomiasi",
+        "Pátio 2 - Tomiasi",
+        "Pátio 2 - Tomiasi",
+        "-"
+      ]
+    },
+    {
+      "tipo": "40 DRY",
+      "valores": [
+        "Pátio 2 - Tomiasi",
+        "Pátio 2 - Tomiasi",
+        "Pátio 2 - Tomiasi",
+        "Pátio 2 - Tomiasi",
+        "Pátio 2 - Tomiasi",
+        "Pátio 2 - Tomiasi",
+        "-"
+      ]
+    },
+    {
+      "tipo": "40 HIGH CUBE",
+      "valores": [
+        "Pátio 10 - Delima / Super Terminais",
+        "Pátio 10 – Delima",
+        "Super Terminais das 8 as 18h/ Pátio 10 - Delima das 18h as 22:40h",
+        "Pátio 10 – Delima",
+        "Pátio 10 - Delima",
+        "Super Terminais das 8 as 14h Pátio 10 - Delima das 7 as 8h e 14 as 15h",
+        "-"
+      ]
+    },
+    {
+      "tipo": "20/40 REEFER",
+      "valores": [
+        "Pátio 2 - Tomiasi",
+        "Pátio 2 - Tomiasi",
+        "Pátio 2 - Tomiasi",
+        "Pátio 2 - Tomiasi",
+        "Pátio 2 - Tomiasi",
+        "Pátio 2 - Tomiasi",
+        "-"
+      ]
+    },
+    {
+      "tipo": "20/40 FLAT RACK",
+      "valores": [
+        "Pátio 2 - Tomiasi",
+        "Pátio 2 - Tomiasi",
+        "Pátio 2 - Tomiasi",
+        "Pátio 2 - Tomiasi",
+        "Pátio 2 - Tomiasi",
+        "Pátio 2 - Tomiasi",
+        "-"
+      ]
+    },
+    {
+      "tipo": "20/40 OPEN TOP",
+      "valores": [
+        "Pátio 2 - Tomiasi",
+        "Pátio 2 - Tomiasi",
+        "Pátio 2 - Tomiasi",
+        "Pátio 2 - Tomiasi",
+        "Pátio 2 - Tomiasi",
+        "Pátio 2 - Tomiasi",
+        "-"
+      ]
+    }
+  ],
+  "atualizadoEm": "2026-11-19T17:34:00.000Z",
+  "fonte": "https://www.portalagendamentos.com.br/pt-br/site/devimportacao",
+  "origem": "copia-verificada-em-indice-publico-2026-11-23",
+  "desatualizado": true,
+  "aviso": "Programação pública consultada em índice de 23/11, com última atualização indicada em 19/11/2026. Não houve confirmação direta em tempo real; confirme também na fonte oficial e na lista OFF HIRE."
+}
