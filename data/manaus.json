@@ -82,9 +82,8 @@
       ]
     }
   ],
-  "atualizadoEm": "2026-11-19T17:34:00.000Z",
+  "atualizadoEm": "2026-11-24T22:31:40.118Z",
   "fonte": "https://www.portalagendamentos.com.br/pt-br/site/devimportacao",
-  "origem": "copia-verificada-em-indice-publico-2026-11-23",
-  "desatualizado": true,
-  "aviso": "Programação pública consultada em índice de 23/11, com última atualização indicada em 19/11/2026. Não houve confirmação direta em tempo real; confirme também na fonte oficial e na lista OFF HIRE."
+  "origem": "coleta-automatica-github",
+  "desatualizado": false
 }
